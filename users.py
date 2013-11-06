@@ -35,7 +35,7 @@ class User():
         Returns None."""
 
         for skill in self.skillset:
-            if skillname in skill.name:
+            if skillname == skill.name:
                 self.skillset.remove(skill)
 
     def add_time(self, skillname, time):
@@ -52,7 +52,7 @@ class User():
             raise OutOfRangeError("time added must be positive")
 
         for index, skill in enumerate(self.skillset):
-            if skillname in skill.name:
+            if skillname == skill.name:
                 self.skillset[index].hours += time
                 skill_exists = True
 
