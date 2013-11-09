@@ -5,7 +5,8 @@
 #              skills
 # note: This is my first program using Python 3. There will
 #       be a lot of comments that make this obvious.
-# TODO: -GUI wrapper
+# TODO: -Switch to json
+#       -GUI wrapper
 #############################################################
 
 '''
@@ -55,24 +56,6 @@ def main():
 
     Returns None"""
 
-    def skill_choice():
-        """Creates menu of all the skills in current user's skillset.
-        
-        Keyword arguments: none
-
-        Returns None"""
-
-        skill_names = user.getskillnames()
-        skill_choices_dict = {str(i + 1):skill_names[i] for i in range(len(skill_names))}
-        print("Please select an option:")
-        for i in range(len(skill_names)):
-            print("{0}. {1}".format(i + 1, skill_names[i]))
-
-        choice = input()
-        if choice in skill_choices_dict:
-            return skill_choices_dict[choice]
-        else:
-            print("Not a valid option.")
 
     u_choice = menu('u')
     user = User("placeholder")
@@ -86,7 +69,7 @@ def main():
         u_file = "{}.pickle".format(username)
         with open(u_file, 'rb') as f:
             user = pickle.load(f)
-        s_choice = menu('s')
+        s_choice = menu('ms')
     else:
         exit(0)
 
@@ -100,10 +83,10 @@ def main():
                 print("a valid number must be entered")
                 exit(1)
         elif s_choice == 'delete':
-            skill = skill_choice()
+            skill = menu('s', user)
             user.remove_skill(skill)
         elif s_choice == 'add_time':
-            skill = skill_choice()
+            skill = menu('s', user)
             try:
                 hours = float(input("Number of hours to add: "))
                 user.add_time(skill, hours)
@@ -114,7 +97,7 @@ def main():
             user.printprogress()
             print()
 
-        s_choice = menu('s')
+        s_choice = menu('ms')
 
     u_file = "{}.pickle".format(user.name)
     with open(u_file, 'wb') as f:
@@ -122,7 +105,7 @@ def main():
         exit(0)
     
 
-def menu(key):
+def menu(key, user=None):
     """Creates requested menu and returns user's choice.
 
     Keyword arguments:
@@ -133,7 +116,7 @@ def menu(key):
     user_menu_dict = {'1': 'create', '2': 'load', '3': 'exit'}
     skill_menu_dict = {'1': 'add_skill', '2':'delete', '3':'add_time', '4':'print', '5':'exit'}
 
-    if key == "u": #user menu
+    if key == 'u': #user menu
         print("Please select an option:")
         print("1. Create user")
         print("2. Load user")
@@ -145,7 +128,7 @@ def menu(key):
         else:
             print("Not a valid option.")
 
-    elif key == "s": #skill menu
+    elif key == 'ms': #modify skill menu
         print("1. Add skill")
         print("2. Delete skill")
         print("3. Add time")
@@ -157,7 +140,18 @@ def menu(key):
             return skill_menu_dict[choice]
         else:
             print("Not a valid option.")
-   
+    elif key == 's': #skill menu
+       skill_names = user.getskillnames()
+       skill_choices_dict = {str(i + 1):skill_names[i] for i in range(len(skill_names))}
+       print("Please select an option:")
+       for i in range(len(skill_names)):
+           print("{0}. {1}".format(i + 1, skill_names[i]))
+
+       choice = input()
+       if choice in skill_choices_dict:
+           return skill_choices_dict[choice]
+       else:
+           print("Not a valid option.")
 
 #This is used to test a module.
 #All modules are objects (like everything else in python) with a
