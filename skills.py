@@ -1,8 +1,7 @@
 ############################################
 #author: Rachel Galang
 #desc: class and methods for skills
-#TODO: -Write method to calculate progress
-#       percentage for a given skill.
+#TODO: -Implement levels
 ###########################################
 
 class OutOfRangeError(ValueError): pass
@@ -15,3 +14,6 @@ class Skill():
             self.hours = hours
         else:
             raise OutOfRangeError("hours should be positive")
+
+    def calcprogress(self):
+        return (self.hours/10000) * 100

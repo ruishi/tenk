@@ -66,7 +66,6 @@ class User():
 
     def printprogress(self):
         for skill in self.skillset:
-            percent = int((skill.hours / 10000) * 100)
-            p = ':' * int(percent/2)
-            s = ' ' * (50 - int(percent/2))
+            p = ':' * int(skill.calcprogress()/2)
+            s = ' ' * (50 - int(skill.calcprogress()/2))
             print("{0} ({1}):\n [{2}{3}]".format(skill.name, skill.hours, p, s))
