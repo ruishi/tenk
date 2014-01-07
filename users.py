@@ -21,7 +21,7 @@ class User():
         skillname -- the name of the skill being added
         hours -- the amount of time spent developing the skill so far
 
-        Returns None. """
+        Returns None"""
 
         skill = skills.Skill(skillname, hours)
         self.skillset.append(skill)
@@ -61,11 +61,29 @@ class User():
 
 
     def getskillnames(self):
+        """Returns a list with all the names of all the skills a user is
+        practicing.
+
+        Keyword arguments: None
+
+        Returns: str list"""
+
         skill_names = [skill.name for skill in self.skillset]
         return skill_names
 
     def printprogress(self):
+        """Prints progress being made in each skill to stdout. Uses : as a 
+        progress marker, with each : representing 2%.
+
+        Keyword arguments: None
+
+        Returns: None"""
+
         for skill in self.skillset:
-            p = ':' * int(skill.calcprogress()/2)
-            s = ' ' * (50 - int(skill.calcprogress()/2))
-            print("{0} ({1}):\n [{2}{3}]".format(skill.name, skill.hours, p, s))
+            progmarkers = ':' * int(skill.calcprogress()/2)
+            spaces = ' ' * (50 - int(skill.calcprogress()/2))
+            print("{0} ({1}, level {2}):\n [{3}{4}]".format(skill.name, 
+                                                 skill.hours,
+                                                 skill.calclevel(),
+                                                 progmarkers, 
+                                                 spaces))
