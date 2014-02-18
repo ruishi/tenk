@@ -1,3 +1,8 @@
+################################################################################
+#author: RD Galang
+#desc: unit tests for skills.py
+#TODO: test Skill.calcprogress()
+################################################################################
 import sys
 sys.path.append("..")
 
@@ -25,5 +30,22 @@ class TestSkills(unittest.TestCase):
         """skills should not accept negative values for the hours attribute"""
         self.assertRaises(skills.OutOfRangeError, skills.Skill, 'x', -1)
 
+    def test_calclevel(self):
+        """skills should accurately calculate skill level"""
+        skill = skills.Skill("programming", 0)
+        self.assertEqual(0, skill.calclevel())
+        skill.hours = 5
+        self.assertEqual(0, skill.calclevel())
+        skill.hours = 1000
+        self.assertEqual(1, skill.calclevel())
+        skill.hours = 9999
+        self.assertEqual(9, skill.calclevel())
+        skill.hours = 10000
+        self.assertEqual(10, skill.calclevel())
+        skill.hours = 20000
+        self.assertEqual(10, skill.calclevel())
+
+    def test_calcprogress(self):
+        pass
 if __name__ == "__main__":
     unittest.main()
