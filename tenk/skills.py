@@ -1,7 +1,7 @@
 ################################################################################
 #author: RD Galang
 #desc: class and methods for skills. 
-#TODO: -Implement levels
+#TODO: -create improved, sensical leveling system
 ################################################################################
 
 class OutOfRangeError(ValueError): pass
@@ -23,12 +23,12 @@ class Skill():
         Returns int"""
 
         level = 0
-        levels = range(1,11) #levels 1-10
+        levels = range(0,11) #levels 0-10
         for i in levels:
-            max = i * 1000
+            max = (i + 1) * 1000
+            level = i
             if self.hours < max:
-                level = i
-                break
+                return level
         return level
 
     def calcprogress(self):
