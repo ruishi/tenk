@@ -7,6 +7,7 @@
 import skills
 
 class OutOfRangeError(ValueError): pass
+class DoesNotExistError(Exception): pass
 
 class User():
 
@@ -57,7 +58,7 @@ class User():
                 skill_exists = True
 
         if not skill_exists:
-            print("skill does not exist.")
+            raise DoesNotExistError("skill does not exist.")
 
 
     def getskillnames(self):
