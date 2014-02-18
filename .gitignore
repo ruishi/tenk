@@ -1,3 +1,5 @@
 *.pyc
 *.pickle
 *~
+.coverage
+tenk/tests/htmlcov
