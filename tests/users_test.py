@@ -4,10 +4,7 @@
 #TODO: -add unit test to ensure duplicate
 #       skills are not added
 ################################################################################
-import sys
-sys.path.append("..")
-
-import users
+from tenk import users
 
 import unittest
 

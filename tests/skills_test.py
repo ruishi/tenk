@@ -3,10 +3,7 @@
 #desc: unit tests for skills.py
 #TODO: test Skill.calcprogress()
 ################################################################################
-import sys
-sys.path.append("..")
-
-import skills
+from tenk import skills
 import unittest
 
 class TestSkills(unittest.TestCase):
