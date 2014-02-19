@@ -36,18 +36,12 @@ more complicated with if statements
 
 '''
 
-import os #module to retrieve information on and manipulate files, directories, etc.
+import os
 from sys import exit
-from users import * #if you use from __ import __ rather than import __, you can reference a method without naming the class.
-                    #ex: instantiating with User(username) instead of users.Username(username)
-import pickle
-
-'''
-error types:
-ImportError
-NameError - call variable that DNE
-ValueError - value not in list
-'''
+from users import User
+import tkserializer
+import json
+import glob
 
 def main():
     """"Command-line interface for tenk.
@@ -56,19 +50,19 @@ def main():
 
     Returns None"""
 
-
+    #user = User("")
     u_choice = menu('u')
-    user = User("placeholder")
     
     if u_choice == 'create':
         username = input("Desired username: ")
-        user.name = username
-        s_choice = menu('s')
+        user = User(username)
+        print("\nWelome {}!\n".format(username))
+        s_choice = menu('ms')
     elif u_choice == 'load':
-        username = input("Username: ")
-        u_file = "{}.pickle".format(username)
-        with open(u_file, 'rb') as f:
-            user = pickle.load(f)
+        u_file = menu('l')
+        with open(u_file, encoding='utf-8', mode='r') as f:
+            user = json.load(f, object_hook=tkserializer.from_json)
+        print("\nWelcome back {}!\n".format(user.name))
         s_choice = menu('ms')
     else:
         exit(0)
@@ -98,10 +92,10 @@ def main():
             print()
 
         s_choice = menu('ms')
-
-    u_file = "{}.pickle".format(user.name)
-    with open(u_file, 'wb') as f:
-        pickle.dump(user, f)
+    
+    u_file = "{}.tk".format(user.name)
+    with open(u_file, encoding='utf-8', mode='w') as f:
+        json.dump(user, f, indent=2, default=tkserializer.to_json)
         exit(0)
     
 
@@ -114,7 +108,8 @@ def menu(key, user=None):
     Returns str or None."""
     
     user_menu_dict = {'1': 'create', '2': 'load', '3': 'exit'}
-    skill_menu_dict = {'1': 'add_skill', '2':'delete', '3':'add_time', '4':'print', '5':'exit'}
+    skill_menu_dict = {'1': 'add_skill', '2':'delete', '3':'add_time', 
+                       '4':'print', '5':'exit'}
 
     if key == 'u': #user menu
         print("Please select an option:")
@@ -122,12 +117,7 @@ def menu(key, user=None):
         print("2. Load user")
         print("3. Exit")
         
-        choice = input("")
-        if choice in user_menu_dict:
-            return user_menu_dict[choice]
-        else:
-            print("Not a valid option.")
-
+        return choose_from(user_menu_dict)
     elif key == 'ms': #modify skill menu
         print("1. Add skill")
         print("2. Delete skill")
@@ -135,23 +125,35 @@ def menu(key, user=None):
         print("4. Print progress")
         print("5. Exit")
 
-        choice = input("")
-        if choice in skill_menu_dict:
-            return skill_menu_dict[choice]
-        else:
-            print("Not a valid option.")
+        return choose_from(skill_menu_dict)
     elif key == 's': #skill menu
-       skill_names = user.getskillnames()
-       skill_choices_dict = {str(i + 1):skill_names[i] for i in range(len(skill_names))}
-       print("Please select an option:")
-       for i in range(len(skill_names)):
-           print("{0}. {1}".format(i + 1, skill_names[i]))
+        skill_names = user.getskillnames()
+        skill_choices_dict = generate_dict(skill_names)
+        print("Please select an option:")
+        for i in range(len(skill_names)):
+            print("{0}. {1}".format(i + 1, skill_names[i]))
+        return choose_from(skill_choices_dict)
+    elif key == 'l': #load user menu
+        user_list = glob.glob("*.tk")
+        if len(user_list) == 1:
+            return user_list[0]
+        else:
+            user_choice_dict = generate_dict(user_list)
+            print("Please select an option:")
+            for i in range(len(user_list)):
+                print("{0}. {1}".format(i + 1, user_list[i][:-3]))
 
-       choice = input()
-       if choice in skill_choices_dict:
-           return skill_choices_dict[choice]
-       else:
-           print("Not a valid option.")
+            return choose_from(user_choice_dict)
+
+def choose_from(choice_dict):
+    choice = input()
+    if choice in choice_dict:
+        return choice_dict[choice]
+    else:
+        print("Not a valid option")
+
+def generate_dict(xs):
+    return {str(i + 1):xs[i] for i in range(len(xs))}
 
 #This is used to test a module or run it as a script.
 #All modules are objects (like everything else in python) with a
