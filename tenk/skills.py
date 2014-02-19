@@ -46,12 +46,7 @@ class Skill():
 
     """Comparison methods for testing"""
     def __eq__(self, other):
-        if self.name == other.name:
-            for s1, s2 in zip(self.skillset, other.skillset):
-                if not s1 == s2:
-                    return False
-            return True
-        return False
+        return self.__dict__ == other.__dict__
 
     def __ne__(self, other):
         return not self == other
