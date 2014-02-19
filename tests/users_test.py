@@ -4,7 +4,7 @@
 #TODO: -add unit test to ensure duplicate
 #       skills are not added
 ################################################################################
-from tenk import users
+import users
 
 import unittest
 
@@ -12,11 +12,11 @@ class TestUsers(unittest.TestCase):
  
     def setUp(self):
         unittest.TestCase.setUp(self)
-        self.user = users.User("rachelg")
+        self.user = users.User("rdg")
     
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-        self.user.skillset[:] = []
+        del self.user.skillset[:]
 
     def test_add_skill(self):
         """users should be able to create skill object and add to skillset"""
