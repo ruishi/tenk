@@ -2,4 +2,4 @@
 *.pickle
 *~
 .coverage
-tenk/tests/htmlcov
+tests/htmlcov
