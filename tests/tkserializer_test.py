@@ -21,8 +21,9 @@ class TKSerializerTest(unittest.TestCase):
             json.dump(user, f, default=tkserializer.to_json, indent=2)
         with open('test.tk', encoding='utf-8', mode='r') as f:
             user2 = json.load(f, object_hook=tkserializer.from_json)
+        os.remove('test.tk')
         self.assertEqual(user, user2)
-        
+       
 
 if __name__ == '__main__':
     unittest.main()
