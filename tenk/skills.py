@@ -41,5 +41,17 @@ class Skill():
         Returns: Float"""
 
         level = self.calclevel()
-        levelmax = 1000 * level
+        levelmax = 1000 * (level + 1)
         return (self.hours/levelmax) * 100        
+
+    """Comparison methods for testing"""
+    def __eq__(self, other):
+        if self.name == other.name:
+            for s1, s2 in zip(self.skillset, other.skillset):
+                if not s1 == s2:
+                    return False
+            return True
+        return False
+
+    def __ne__(self, other):
+        return not self == other

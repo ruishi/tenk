@@ -1,9 +1,9 @@
-####################################
+#!/usr/bin/env python3
+################################################################################
 #author: RD Galang
 #desc: class and methods for users
 #TODO: ...
-####################################
-
+################################################################################
 import skills
 
 class OutOfRangeError(ValueError): pass
@@ -88,3 +88,9 @@ class User():
                                                  skill.calclevel(),
                                                  progmarkers, 
                                                  spaces))
+    """Comparison methods for testing"""
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not self == other
