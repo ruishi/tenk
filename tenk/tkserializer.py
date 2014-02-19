@@ -22,10 +22,10 @@ def to_json(obj):
 
 def from_json(obj):
     if '__class__' in obj:
-        if json_object['__class__'] == 'User':
+        if obj['__class__'] == 'User':
             user = User(obj['name'])
             user.skillset = obj['skills']
             return user
-        if json_object['__class__'] == 'Skill':
+        if obj['__class__'] == 'Skill':
             return Skill(obj['name'], obj['hours'])
     return obj
