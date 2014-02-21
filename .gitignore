@@ -2,4 +2,4 @@
 *.tk
 *~
 .coverage
-tests/htmlcov
+htmlcov
