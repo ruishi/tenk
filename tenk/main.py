@@ -1,58 +1,22 @@
 ##############################################################
 # author: RD Galang
 # filename: tenk.py
-# description: Keeps track of time spent developing various 
+# description: Keeps track of time spent developing various
 #              skills
-# note: This is my first program using Python 3. There will
-#       be a lot of comments that make this obvious.
-# TODO: -Switch to json
-#       -GUI wrapper
 #############################################################
-
-'''
-try:
-  import someMod
-except ImportError:
-  someMod = None
-
-then can check for presence using if -
-if chardet:
-  #do something
-else:
-  #continue anyway
-
-clearly, the above is best for 3rd party libraries
-
-when two modules implement API, can import one, but fall back to a
-different one if the first fails:
-
-try:
-  from lxml import etree
-except ImportError:
-  import xml.etree.ElementTree as etree
-
-notice the fallback is renamed as etree so code body does not need to be
-more complicated with if statements
-
-'''
 
 import os
 from sys import exit
-from users import User
-import tkserializer
+from tenk.users import User
+import tenk.tkserializer as tkserializer
 import json
 import glob
 
 def main():
-    """"Command-line interface for tenk.
+    """"Command-line menu interface for tenk."""
 
-    Keyword arguments: None
-
-    Returns None"""
-
-    #user = User("")
     u_choice = menu('u')
-    
+
     if u_choice == 'create':
         username = input("Desired username: ")
         user = User(username)
@@ -92,12 +56,12 @@ def main():
             print()
 
         s_choice = menu('ms')
-    
+
     u_file = "{}.tk".format(user.name)
     with open(u_file, encoding='utf-8', mode='w') as f:
         json.dump(user, f, indent=2, default=tkserializer.to_json)
         exit(0)
-    
+
 
 def menu(key, user=None):
     """Creates requested menu and returns user's choice.
@@ -106,9 +70,9 @@ def menu(key, user=None):
     key -- menu identifier
 
     Returns str or None."""
-    
+
     user_menu_dict = {'1': 'create', '2': 'load', '3': 'exit'}
-    skill_menu_dict = {'1': 'add_skill', '2':'delete', '3':'add_time', 
+    skill_menu_dict = {'1': 'add_skill', '2':'delete', '3':'add_time',
                        '4':'print', '5':'exit'}
 
     if key == 'u': #user menu
@@ -116,7 +80,7 @@ def menu(key, user=None):
         print("1. Create user")
         print("2. Load user")
         print("3. Exit")
-        
+
         return choose_from(user_menu_dict)
     elif key == 'ms': #modify skill menu
         print("1. Add skill")
@@ -146,6 +110,7 @@ def menu(key, user=None):
             return choose_from(user_choice_dict)
 
 def choose_from(choice_dict):
+    """Given a dictionary of menu choices, returns a choice."""
     choice = input()
     if choice in choice_dict:
         return choice_dict[choice]
@@ -153,12 +118,9 @@ def choose_from(choice_dict):
         print("Not a valid option")
 
 def generate_dict(xs):
+    """Creates a dictionary where the key is a string representing
+    a number and the value is an element of xs"""
     return {str(i + 1):xs[i] for i in range(len(xs))}
 
-#This is used to test a module or run it as a script.
-#All modules are objects (like everything else in python) with a
-#built-in attribute __name__, which changes depending on how the
-#module is being used. If you import it, __name__ is the module's
-#filename. Otherwise __name__ is __main__.
 if __name__ == '__main__':
     main()

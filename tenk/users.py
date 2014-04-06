@@ -4,7 +4,7 @@
 #desc: class and methods for users
 #TODO: ...
 ################################################################################
-import skills
+import tenk.skills as skills
 
 class OutOfRangeError(ValueError): pass
 class DoesNotExistError(Exception): pass

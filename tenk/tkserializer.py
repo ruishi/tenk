@@ -4,8 +4,8 @@
 #description: Custom JSON serializer for User class
 ################################################################################
 import json
-from users import User
-from skills import Skill
+from tenk.users import User
+from tenk.skills import Skill
 
 def to_json(obj):
     if isinstance(obj, User):

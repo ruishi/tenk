@@ -1,19 +1,19 @@
 ################################################################################
 #author: RD Galang
 #desc: unit tests for users.py
-#TODO: -add unit test to ensure duplicate
-#       skills are not added
+#TODO: add unit test to ensure duplicate skills are not added
 ################################################################################
-import users
+
+import tenk.users as users
 
 import unittest
 
 class TestUsers(unittest.TestCase):
- 
+
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.user = users.User("rdg")
-    
+
     def tearDown(self):
         unittest.TestCase.tearDown(self)
         del self.user.skillset[:]
@@ -31,30 +31,37 @@ class TestUsers(unittest.TestCase):
         self.user.add_skill('french', 2000)
         self.user.add_skill('p', 5)
         self.user.remove_skill('p')
-        self.assertEqual(3, len(self.user.skillset)) #checks that only one skill was removed
+        #ensure only one skill is removed
+        self.assertEqual(3, len(self.user.skillset))
         skillnames = [x.name for x in self.user.skillset]
-        self.assertTrue("p" not in skillnames) #checks if specified skill was removed
+        #ensures specified skill was removed
+        self.assertTrue("p" not in skillnames)
 
     def test_getskillnames(self):
+        """users should successfully retrieve all skill names in a
+        user's skillset"""
         self.user.add_skill('programming', 500)
         self.user.add_skill('piano', 5)
         self.user.add_skill('french', 100)
-        self.assertEqual(['programming', 'piano', 'french'], self.user.getskillnames())
+        self.assertEqual(['programming', 'piano', 'french'],
+                         self.user.getskillnames())
 
     def test_add_time(self):
         """users should be able to add time to any skill"""
         self.user.add_skill('programming', 500)
         self.user.add_time('programming', 25)
         self.assertEqual(525, self.user.skillset[0].hours)
-    
+
     def test_add_time2(self):
         """users should not be able to add time to a non-existent skill"""
-        self.assertRaises(users.DoesNotExistError, self.user.add_time, 'spellunking', 25)
+        self.assertRaises(users.DoesNotExistError,
+                          self.user.add_time, 'spellunking', 25)
 
     def test_negative(self):
         """users should not accept negative values when adding time to skill"""
         self.user.add_skill('programming', 100)
-        self.assertRaises(users.OutOfRangeError, self.user.add_time, 'programming', -1)
+        self.assertRaises(users.OutOfRangeError,
+                          self.user.add_time, 'programming', -1)
 
 if __name__ == "__main__":
     unittest.main()

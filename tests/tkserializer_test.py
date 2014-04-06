@@ -6,8 +6,8 @@
 
 import os
 import unittest
-import tkserializer
-from users import User
+import tenk.tkserializer as tkserializer
+from tenk.users import User
 import json
 
 class TKSerializerTest(unittest.TestCase):
