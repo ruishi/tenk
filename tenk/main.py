@@ -1,9 +1,9 @@
-##############################################################
+################################################################################
 # author: RD Galang
 # filename: tenk.py
 # description: Keeps track of time spent developing various
 #              skills
-#############################################################
+################################################################################
 
 import os
 from sys import exit
@@ -13,7 +13,7 @@ import json
 import glob
 
 def main():
-    """"Command-line menu interface for tenk."""
+    """"Command-line menu interface entry point for tenk."""
 
     u_choice = menu('u')
 
@@ -24,6 +24,7 @@ def main():
         s_choice = menu('ms')
     elif u_choice == 'load':
         u_file = menu('l')
+        check_storage()
         with open(u_file, encoding='utf-8', mode='r') as f:
             user = json.load(f, object_hook=tkserializer.from_json)
         print("\nWelcome back {}!\n".format(user.name))
@@ -57,11 +58,18 @@ def main():
 
         s_choice = menu('ms')
 
-    u_file = "{}.tk".format(user.name)
+    check_storage()
+    u_file = os.path.join(os.path.expanduser('~'),
+                          'tenk/{}.tk'.format(user.name))
     with open(u_file, encoding='utf-8', mode='w') as f:
         json.dump(user, f, indent=2, default=tkserializer.to_json)
         exit(0)
 
+def check_storage():
+    """Checks if there's a tenk folder in the user's home directory.
+    Creates one if one doesn't exist."""
+    if not os.path.exists(os.path.join(os.path.expanduser('~'), 'tenk')):
+        os.makedirs(os.path.join(os.path.expanduser('~'), 'tenk'))
 
 def menu(key, user=None):
     """Creates requested menu and returns user's choice.
@@ -98,8 +106,11 @@ def menu(key, user=None):
             print("{0}. {1}".format(i + 1, skill_names[i]))
         return choose_from(skill_choices_dict)
     elif key == 'l': #load user menu
-        user_list = glob.glob("*.tk")
-        if len(user_list) == 1:
+        user_list = glob.glob(os.path.expanduser('~/tenk/*.tk'))
+        if not user_list:
+            print("No user data found.")
+            exit(1)
+        elif len(user_list) == 1:
             return user_list[0]
         else:
             user_choice_dict = generate_dict(user_list)
@@ -115,7 +126,7 @@ def choose_from(choice_dict):
     if choice in choice_dict:
         return choice_dict[choice]
     else:
-        print("Not a valid option")
+        print("Not a valid option.")
 
 def generate_dict(xs):
     """Creates a dictionary where the key is a string representing

@@ -1,6 +1,4 @@
 *.pyc
-*.tk
-*~
 .coverage
 htmlcov
 tkenv

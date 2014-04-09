@@ -10,7 +10,7 @@ Development
 ===========
 tenk was developed using Python 3 and is not compatible with Python 2.7. Feature development is done on the "dev" branch.
 
-To run the unit tests, cd to the parent directory and enter `python3 -m unittest discover -p '*_test.py' -v`
+To run the unit tests, cd to the parent directory and enter `python3 -m unittest discover -p '*_test.py'`
 
 Dependencies
 ------------
