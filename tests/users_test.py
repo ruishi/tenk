@@ -1,8 +1,5 @@
-################################################################################
-#author: RD Galang
-#desc: unit tests for users.py
+"""Unit tests for User class"""
 #TODO: add unit test to ensure duplicate skills are not added
-################################################################################
 
 import tenk.users as users
 

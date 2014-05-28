@@ -1,9 +1,4 @@
-################################################################################
-# author: RD Galang
-# filename: tenk.py
-# description: Keeps track of time spent developing various
-#              skills
-################################################################################
+"""CLI menu interface"""
 
 import os
 from sys import exit

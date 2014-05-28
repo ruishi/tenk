@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-################################################################################
-#author: RD Galang
-#description: Custom JSON serializer for User class
-################################################################################
+"""Custom JSON serializer for User and Skill classes"""
+
 import json
 from tenk.users import User
 from tenk.skills import Skill
