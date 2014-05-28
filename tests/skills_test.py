@@ -1,8 +1,5 @@
-################################################################################
-#author: RD Galang
-#desc: unit tests for skills.py
-#TODO: test Skill.calcprogress()
-################################################################################
+"""Unit tests for Skills class"""
+
 from tenk import skills
 import unittest
 
@@ -15,7 +12,7 @@ class TestSkills(unittest.TestCase):
         self.assertEqual(3, skill.hours)
 
     def test_set(self):
-        """skills should return new values when setting attributes to 
+        """skills should return new values when setting attributes to
         other values"""
         skill = skills.Skill("test skill", 3)
         skill.name = "new skill"
@@ -33,16 +30,34 @@ class TestSkills(unittest.TestCase):
         self.assertEqual(0, skill.calclevel())
         skill.hours = 5
         self.assertEqual(0, skill.calclevel())
-        skill.hours = 1000
+        # test boundary values
+        skill.hours = 100
         self.assertEqual(1, skill.calclevel())
+        skill.hours = 99
+        self.assertEqual(0, skill.calclevel())
         skill.hours = 9999
-        self.assertEqual(9, skill.calclevel())
+        self.assertEqual(99, skill.calclevel())
         skill.hours = 10000
-        self.assertEqual(10, skill.calclevel())
+        self.assertEqual(100, skill.calclevel())
+        # test 10K+ hours
         skill.hours = 20000
-        self.assertEqual(10, skill.calclevel())
+        self.assertEqual(100, skill.calclevel())
 
     def test_calcprogress(self):
-        pass
+        skill = skills.Skill("piano", 0)
+        self.assertEqual(0, skill.calcprogress())
+        skill.hours = 50
+        self.assertEqual(50, skill.calcprogress())
+        skill.hours = 86
+        self.assertEqual(86, skill.calcprogress())
+        skill.hours = 500
+        self.assertEqual(0, skill.calcprogress())
+        skill.hours = 586
+        self.assertEqual(86, skill.calcprogress())
+        skill.hours = 10000
+        self.assertEqual(100, skill.calcprogress())
+        skill.hours = 20000
+        self.assertEqual(100, skill.calcprogress())
+
 if __name__ == "__main__":
     unittest.main()
