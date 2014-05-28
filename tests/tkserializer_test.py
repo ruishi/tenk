@@ -1,8 +1,5 @@
-#!usr/bin/env python3
-################################################################################
-#author: RD Galang
-#description: Tests custom JSON serializer
-################################################################################
+"""Tests custom JSON serializer"""
+
 
 import os
 import unittest
@@ -20,7 +17,7 @@ class TKSerializerTest(unittest.TestCase):
         del self.user.skillset[:]
 
     def test_serializer(self):
-        """serializer should successfully convert from 
+        """serializer should successfully convert from
         custom classes to json and vice versa"""
         self.user.add_skill("programming", 50)
         self.user.add_skill("chinese", 200)
@@ -30,7 +27,7 @@ class TKSerializerTest(unittest.TestCase):
             user2 = json.load(f, object_hook=tkserializer.from_json)
         os.remove('test.tk')
         self.assertEqual(self.user, user2)
-       
+
 
 if __name__ == '__main__':
     unittest.main()

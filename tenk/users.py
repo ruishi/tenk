@@ -1,9 +1,5 @@
-#!/usr/bin/env python3
-################################################################################
-#author: RD Galang
-#desc: class and methods for users
-#TODO: ...
-################################################################################
+"""Manages a user's skillset"""
+
 import tenk.skills as skills
 
 class OutOfRangeError(ValueError): pass
@@ -51,7 +47,7 @@ class User:
         skillname - the name of the skill to add hours to
 
         Returns None."""
-        
+
         skill_exists = False
 
         if time < 0:
@@ -78,20 +74,19 @@ class User:
         return skill_names
 
     def printprogress(self):
-        """Prints progress being made in each skill to stdout. Uses : as a 
+        """Prints progress being made in each skill to stdout. Uses : as a
         progress marker, with each : representing 2%.
 
         Keyword arguments: None
 
         Returns: None"""
-
         for skill in self.skillset:
             progmarkers = ':' * int(skill.calcprogress()/2)
             spaces = ' ' * (50 - int(skill.calcprogress()/2))
-            print("{0} ({1}, level {2}):\n [{3}{4}]".format(skill.name, 
+            print("{0} ({1}, level {2}):\n [{3}{4}]".format(skill.name,
                                                  skill.hours,
                                                  skill.calclevel(),
-                                                 progmarkers, 
+                                                 progmarkers,
                                                  spaces))
     """Comparison methods for testing"""
     def __eq__(self, other):

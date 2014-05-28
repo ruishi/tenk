@@ -1,4 +1,4 @@
-"""Unit tests for Skills class"""
+"""Unit tests for Skill class"""
 
 from tenk import skills
 import unittest
