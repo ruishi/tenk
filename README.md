@@ -4,7 +4,7 @@ tenk is a program inspired from the "10,000-Hour Rule," which claims that 10,000
 
 Usage
 =====
-tenk is a CLI application. It can be run by executing main.py. A GUI wrapper is in the works.
+tenk is a CLI application. You can run the application with `python3 -m tenk.main`, assuming that you are in the top level project directory.
 
 Development
 ===========
