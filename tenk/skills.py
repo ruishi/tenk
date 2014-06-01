@@ -11,7 +11,7 @@ class Skill():
         else:
             raise OutOfRangeError("hours should be positive")
 
-    def calclevel(self):
+    def calc_level(self):
         """Calculates the "level" a user is at for the skill. There are 100
         levels.
 
@@ -31,7 +31,7 @@ class Skill():
         # which is set to 100 at this point.
         return level
 
-    def calcprogress(self):
+    def calc_progress(self):
         """Calculates the progress being made in a certain skill. Progress
         is determined for the user's current level in the skill, to improve
         morale and progress reports.
@@ -41,9 +41,20 @@ class Skill():
         Returns: Float"""
         if self.hours >= 10000:
             return 100
-        level = self.calclevel()
+        level = self.calc_level()
         level_hours = 100
         return self.hours - (level_hours * level)
+
+    def print_progress(self):
+        """Prints a string representation of current progress"""
+        progress = self.calc_progress()
+        progmarkers = ':' * int(progress/2)
+        spaces = ' ' * (50 - int(progress/2))
+        print("{0} ({1}, level {2}):\n [{3}{4}]".format(self.name,
+                                                        self.hours,
+                                                        self.calc_level(),
+                                                        progmarkers,
+                                                        spaces))
 
     # Comparison methods for testing
     def __eq__(self, other):

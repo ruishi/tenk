@@ -76,13 +76,8 @@ class User():
 
         Returns: None"""
         for skill in self.skillset:
-            progmarkers = ':' * int(skill.calcprogress()/2)
-            spaces = ' ' * (50 - int(skill.calcprogress()/2))
-            print("{0} ({1}, level {2}):\n [{3}{4}]".format(skill.name,
-                                                 skill.hours,
-                                                 skill.calclevel(),
-                                                 progmarkers,
-                                                 spaces))
+            skill.print_progress()
+
     """Comparison methods for testing"""
     def __eq__(self, other):
         if self.name == other.name:
