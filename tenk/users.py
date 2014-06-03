@@ -1,6 +1,6 @@
 """Manages a user's skillset"""
 
-import tenk.skills as skills
+from tenk.skills import Skill
 
 class OutOfRangeError(ValueError): pass
 class DoesNotExistError(Exception): pass
@@ -25,7 +25,7 @@ class User:
 
         Returns None"""
 
-        skill = skills.Skill(skillname, hours)
+        skill = Skill(skillname, hours)
         self.skillset.append(skill)
 
     def remove_skill(self, skillname):
@@ -61,8 +61,7 @@ class User:
         if not skill_exists:
             raise DoesNotExistError("skill does not exist.")
 
-
-    def getskillnames(self):
+    def get_skill_names(self):
         """Returns a list with all the names of all the skills a user is
         practicing.
 
@@ -73,7 +72,7 @@ class User:
         skill_names = [skill.name for skill in self.skillset]
         return skill_names
 
-    def printprogress(self):
+    def print_progress(self):
         """Prints progress being made in each skill to stdout. Uses : as a
         progress marker, with each : representing 2%.
 

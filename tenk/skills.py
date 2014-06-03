@@ -55,11 +55,13 @@ class Skill:
         progress = self.calc_progress()
         progmarkers = ':' * int(progress/2)
         spaces = ' ' * (50 - int(progress/2))
-        print("{0} ({1}, level {2}):\n [{3}{4}]".format(self.name,
-                                                        self.hours,
-                                                        self.calc_level(),
-                                                        progmarkers,
-                                                        spaces))
+        progress_str = "{0} ({1} hours, level {2}):\n [{3}{4}] {5}%"
+        print(progress_str.format(self.name,
+                                  self.hours,
+                                  self.calc_level(),
+                                  progmarkers,
+                                  spaces,
+                                  progress))
 
     # Comparison methods for testing
     def __eq__(self, other):

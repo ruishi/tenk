@@ -21,7 +21,7 @@ class TestUsers(unittest.TestCase):
         self.assertEqual('programming', self.user.skillset[0].name)
         self.assertEqual(500, self.user.skillset[0].hours)
 
-    def test_remove(self):
+    def test_remove_skill(self):
         """users should properly remove specified value from skillset list"""
         self.user.add_skill('programming', 500)
         self.user.add_skill('piano', 3)
@@ -34,14 +34,14 @@ class TestUsers(unittest.TestCase):
         #ensures specified skill was removed
         self.assertTrue("p" not in skillnames)
 
-    def test_getskillnames(self):
+    def test_get_skill_names(self):
         """users should successfully retrieve all skill names in a
         user's skillset"""
         self.user.add_skill('programming', 500)
         self.user.add_skill('piano', 5)
         self.user.add_skill('french', 100)
         self.assertEqual(['programming', 'piano', 'french'],
-                         self.user.getskillnames())
+                         self.user.get_skill_names())
 
     def test_add_time(self):
         """users should be able to add time to any skill"""
