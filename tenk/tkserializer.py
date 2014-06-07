@@ -4,8 +4,11 @@
 #description: Custom JSON serializer for User class
 ################################################################################
 import json
+import datetime
+
 from tenk.users import User
 from tenk.skills import Skill
+from tenk.sessions import Session
 
 def to_json(obj):
     if isinstance(obj, User):

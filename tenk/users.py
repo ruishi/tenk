@@ -9,7 +9,12 @@ import tenk.skills as skills
 class OutOfRangeError(ValueError): pass
 class DoesNotExistError(Exception): pass
 
-class User():
+class User:
+    """Manages a user's skillset.
+
+    Attributes:
+    name (str) -- Name of the user
+    skillset (list) -- A list of Skill objects"""
 
     def __init__(self, username, skillset = []):
         self.name = username

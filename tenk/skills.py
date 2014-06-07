@@ -6,7 +6,12 @@
 
 class OutOfRangeError(ValueError): pass
 
-class Skill():
+class Skill:
+    """Holds and calculates skill progress data.
+
+    Attributes:
+    name (str) -- name of the skill
+    hours (float) -- number of hours spent practicing"""
 
     def __init__(self, name, hours = 0):
         self.name = name
