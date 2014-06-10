@@ -24,7 +24,8 @@ class Session:
         self.skill_name = skill_name
         self.hours = hours
         if session_date:
-            self.session_date = session_date
+            session_date = [int(d) for d in session_date.split('-')]
+            self.session_date = date(*session_date)
         else:
             self.session_date = date.today()
         self.practiced = practiced
@@ -44,7 +45,8 @@ class Session:
         """Generate XML for the session."""
         if self.has_save_file():
             with open(self.file_path) as f:
-                root = etree.parse(f)
+                parser = etree.XMLParser(remove_blank_text=True)
+                root = etree.parse(f, parser).getroot()
             skill_node = root.find('skill[@name="{}"]'.format(self.skill_name))
             if skill_node is not None:
                 session_node = self.find_existing_session(skill_node)
@@ -78,7 +80,12 @@ class Session:
     def update_xml(self, session_node, separator='<br/>'):
         """Update XML for existing session"""
         hours_node = session_node.find('hours')
-        hours_node.text = str(int(hours_node.text) + self.hours)
+        if hours_node is not None and self.hours:
+            hours_node.text = str(float(hours_node.text) + self.hours)
+        else:
+            hours_node = etree.SubElement(session_node, 'hours')
+            hours_node.text = str(self.hours)
+
         detail_tuples = [('practiced', self.practiced),
                          ('improved', self.improved),
                          ('future', self.future)]
@@ -103,7 +110,13 @@ class Session:
 
     def save(self, root):
         """Save XML tree to file."""
-        xml = etree.tostring(root, pretty_print=True, xml_declaration=True)
+        xml = etree.tostring(root, encoding='utf-8', pretty_print=True,
+                             xml_declaration=True)
         xml = xml.decode('utf-8')
         with open(self.file_path, 'w') as f:
             f.write(xml)
+
+    def serialize_and_save(self):
+        """Serialize data into XML and save to file"""
+        root = self.generate_xml()
+        self.save(root)
