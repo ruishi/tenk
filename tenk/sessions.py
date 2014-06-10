@@ -82,7 +82,7 @@ class Session:
         hours_node = session_node.find('hours')
         if hours_node is not None and self.hours:
             hours_node.text = str(float(hours_node.text) + self.hours)
-        else:
+        elif self.hours:
             hours_node = etree.SubElement(session_node, 'hours')
             hours_node.text = str(self.hours)
 
