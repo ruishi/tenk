@@ -14,7 +14,7 @@ directory. You can also run `tenk.sh`
 
 Usage Examples
 --------------
-*List your skills:*
+**List your skills:**
 ```sh
 $ ./tenk.sh ls -s
 1. programming
@@ -22,7 +22,7 @@ $ ./tenk.sh ls -s
 3. piano
 ```
 
-*List your progress:*
+**List your progress:**
 ```sh
 $ ./tenk.sh ls -p
 programming (600.0 hours, level 6):
@@ -33,7 +33,7 @@ piano (15.5 hours, level 0):
  [:::::::                                           ] 15.5%
 ```
 
-*Add and remove skills:*
+**Add and remove skills:**
 ```sh
 $ ./tenk.sh add -s chinese
 $ ./tenk.sh ls -s
