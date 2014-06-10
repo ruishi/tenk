@@ -1,109 +1,38 @@
 """CLI interface for tenk"""
 
-import os
-from sys import exit
-import json
-import glob
 import argparse
-import functools
 
-from tenk.users import User
-import tenk.tkserializer as tkserializer
-from tenk.sessions import Session
+from tenk import utils
 
-no_data_msg = "You have no data!"
-
-def get_data_path():
-    """Returns path to user's data file if it exists. Otherwise returns
-    None"""
-    data_paths = glob.glob(os.path.join(os.path.expanduser('~'),
-                                        'tenk/*.tk'))
-    if data_paths:
-        return data_paths[0]
+def get_skill_choice(choice):
+    user = utils.load_user()
+    if user:
+        skill = generate_dict(user.get_skill_names())[choice]
+        return skill
     else:
         return None
-
-def save(user):
-    u_file = get_data_path()
-    with open(u_file, encoding='utf-8', mode='w') as f:
-        json.dump(user, f, indent=2, default=tkserializer.to_json)
-
-def load_user(create=False):
-    """Load a user's tk file into a User object. If create is True,
-    then a user object will be created if no tk file exists."""
-    if os.path.exists(os.path.join(os.path.expanduser('~'), 'tenk')):
-        u_file = get_data_path()
-        with open(u_file, encoding='utf-8', mode='r') as f:
-            user = json.load(f, object_hook=tkserializer.from_json)
-        return user
-    else:
-        os.makedirs(os.path.join(os.path.expanduser('~'), 'tenk'))
-        if create:
-            u_file = os.path.join(os.path.expanduser('~'),
-                                  'tenk/default.tk')
-            open(u_file, 'a').close()
-            return User("Default")
-        else:
-            return None
 
 def generate_dict(xs):
     """Creates a dictionary where the key is a string representing
     a number and the value is an element of xs"""
     return {float(i + 1):xs[i] for i in range(len(xs))}
 
-def add_time(choice, time, date=None):
-    user = load_user(create=False)
-    if user:
-        skill = generate_dict(user.get_skill_names())[choice]
-        user.add_time(skill, time)
-        save(user)
-        params = {'skill_name': skill, 'hours': time}
-        if date:
-            params['session_date'] = date
-        session = Session(**params)
-        session.serialize_and_save()
-    else:
-        print(no_data_msg)
-
-def add_skill(name, hours=0):
-    user = load_user(create=True)
-    user.add_skill(name, hours)
-    save(user)
-
-def remove_skill(choice):
-    user = load_user(create=False)
-    if user:
-        skill = generate_dict(user.get_skill_names())[choice]
-        user.remove_skill(skill)
-        save(user)
-    else:
-        print(no_data_msg)
-
-def add_notes(choice, notes):
-    user = load_user(create=False)
-    if user:
-        skill = generate_dict(user.get_skill_names())[choice]
-        session = Session(skill, **notes)
-        session.serialize_and_save()
-    else:
-        print(no_data_msg)
-
 def list_skills():
     """List a user's skills and each skill's number."""
-    user = load_user()
+    user = utils.load_user()
     if user:
         for idx, skill in enumerate(user.get_skill_names()):
             print("{}. {}".format(idx + 1, skill))
     else:
-        print(no_data_msg)
+        print(utils.no_data_msg)
 
 def print_progress():
     """Print a user's progress"""
-    user = load_user()
+    user = utils.load_user()
     if user:
         user.print_progress()
     else:
-        print(no_data_msg)
+        print(utils.no_data_msg)
 
 def cli_list_handler(args):
     """Handles list-related CLI arguments"""
@@ -115,23 +44,26 @@ def cli_list_handler(args):
 def cli_add_handler(args):
     """Handles add-related CLI arguments"""
     if args.time:
+        skill = get_skill_choice(args.time[0])
         if args.date:
-            add_time(args.time[0], float(args.time[1]), args.date)
+            utils.add_time(skill, float(args.time[1]), args.date)
         else:
-            add_time(args.time[0], float(args.time[1]))
+            utils.add_time(skill, float(args.time[1]))
     elif args.skill:
         if len(args.skill) == 2:
-            add_skill(args.skill[0], float(args.skill[1]))
+            utils.add_skill(args.skill[0], float(args.skill[1]))
         else:
-            add_skill(args.skill[0])
+            utils.add_skill(args.skill[0])
 
 def cli_del_handler(args):
     """Handles deletion-related CLI arguments"""
     if args.skill:
-        remove_skill(args.skill)
+        skill = get_skill_choice(args.skill)
+        utils.remove_skill(skill)
 
 def cli_note_handler(args):
     """Handles note-related CLI arguments"""
+    skill = get_skill_choice(args.skill)
     notes = dict()
     if args.practiced:
         notes['practiced'] = ' '.join(args.practiced)
@@ -142,7 +74,7 @@ def cli_note_handler(args):
     if args.date:
         notes['session_date'] = args.date
     if notes:
-        add_notes(args.skill, notes)
+        utils.add_notes(skill, notes)
 
 if __name__ == '__main__':
     parser  = argparse.ArgumentParser(prog="python3 -m tenk.main")
