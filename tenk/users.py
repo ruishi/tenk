@@ -59,7 +59,7 @@ class User:
                 skill_exists = True
 
         if not skill_exists:
-            raise DoesNotExistError("skill does not exist.")
+            raise DoesNotExistError("{} not in skillset.".format(skillname))
 
     def get_skill_names(self):
         """Returns a list with all the names of all the skills a user is
