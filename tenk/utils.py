@@ -72,5 +72,6 @@ def add_notes(skill, notes, configfile='default.config'):
         session = Session(skill, file_path=sessions_filepath,
                           **notes)
         session.serialize_and_save()
+        print(session)
     else:
         print(no_data_msg)
