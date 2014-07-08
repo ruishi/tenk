@@ -2,3 +2,4 @@
 .coverage
 htmlcov
 tkenv
+default.config

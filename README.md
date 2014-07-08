@@ -74,4 +74,5 @@ To run a single test, just execute it directly. For example, `python3
 
 Dependencies
 ------------
-tenk requires lxml for the serialization of session data.
++ **lxml** for data serialization
++ **PySide** for the GUI wrapper

@@ -12,15 +12,11 @@ class Session:
     hours (float) -- optional, the amount of hours spent on the
                      practice session
     session_date (datetime.date) -- the date of the practice session
-    practiced (str) -- optional, what was practiced
-    improved (str) -- optional, what improved from last time
-    future (str) -- optional, what to focus on in future sessions
-
+    kwargs (dict) - extra note nodes
     """
 
-    def __init__(self, skill_name, hours=None, session_date=None,
-                 practiced=None, improved=None, future=None,
-                 file_path=None):
+    def __init__(self, skill_name, file_path, hours=None, session_date=None,
+                 **kwargs):
         self.skill_name = skill_name
         self.hours = hours
         if session_date:
@@ -28,14 +24,8 @@ class Session:
             self.session_date = date(*session_date)
         else:
             self.session_date = date.today()
-        self.practiced = practiced
-        self.improved = improved
-        self.future = future
-        if file_path:
-            self.file_path = file_path
-        else:
-            self.file_path = os.path.join(os.path.expanduser('~'),
-                                          'tenk/default.xml')
+        self.notes = kwargs
+        self.file_path = file_path
 
     def has_save_file(self):
         """Returns True if sessions XML file exists, False otherwise"""
@@ -66,15 +56,9 @@ class Session:
         if self.hours:
             hours_node = etree.SubElement(session_node, 'hours')
             hours_node.text = str(self.hours)
-        if self.practiced:
-            practiced_node = etree.SubElement(session_node, 'practiced')
-            practiced_node.text = self.practiced
-        if self.improved:
-            improved_node = etree.SubElement(session_node, 'improved')
-            improved_node.text = self.improved
-        if self.future:
-            future_node = etree.SubElement(session_node, 'future')
-            future_node.text = self.future
+        for k, v in self.notes.items():
+            note_node = etree.SubElement(session_node, k)
+            note_node.text = v
         return root
 
     def update_xml(self, session_node, separator='<br/>'):
@@ -86,19 +70,14 @@ class Session:
             hours_node = etree.SubElement(session_node, 'hours')
             hours_node.text = str(self.hours)
 
-        detail_tuples = [('practiced', self.practiced),
-                         ('improved', self.improved),
-                         ('future', self.future)]
-        for detail in detail_tuples:
-            if detail[1]:
-                detail_node = session_node.find(detail[0])
-                if detail_node is None:
-                    detail_node = etree.SubElement(session_node, detail[0])
-                if detail_node.text is not None:
-                    detail_node.text = separator.join([detail_node.text,
-                                                       detail[1]])
-                else:
-                    detail_node.text = detail[1]
+        for k, v in self.notes.items():
+            note_node = session_node.find(k)
+            if note_node is None:
+                note_node = etree.SubElement(session_node, k)
+            if note_node.text is not None:
+                note_node.text = separator.join([note_node.text, v])
+            else:
+                note_node.text = v
         return session_node
 
     def find_existing_session(self, skill_node):
@@ -120,3 +99,23 @@ class Session:
         """Serialize data into XML and save to file"""
         root = self.generate_xml()
         self.save(root)
+
+    def __repr__(self):
+        """Representation of session object.
+
+        This only includes the data necessary to identify the session,
+        i.e., skill name and session date."""
+
+        return 'Session(skill_name={}, session_date={})'.format(self.skill_name,
+                                                                str(self.session_date))
+
+    def __str__(self):
+        note_strs = ["{}: {}".format(k, v) for k,v in self.notes.items()]
+        note_final_string = '\n'.join(note_strs)
+        string_rep = ("{}\n{}\n"
+                      "Date: {}\n"
+                      "{}".format(self.skill_name,
+                                  '-' * len(self.skill_name),
+                                  str(self.session_date),
+                                  note_final_string))
+        return string_rep
