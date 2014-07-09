@@ -97,6 +97,52 @@ defined in my default.config file. If you use a note category that
 doesn't exist, the note will not be saved. If you don't use a note
 category at all, tenk will save the note in a node called `notes`.
 
+**View notes:**
+```sh
+./tenk.sh view -s 3
+piano
+-----
+Date: 2014-06-09
+improved: chord transitions
+future: major triads and major chord inversions
+learned: chord inversions
+piano
+-----
+Date: 2014-06-11
+improved: chord transitions, hand independence
+learned: chord inversions, hand independence with amazing grace
+piano
+-----
+Date: 2014-06-15
+improved: triads
+future: let it be
+learned: triads, moving in thirds, let it be
+piano
+-----
+Date: 2014-06-16
+improved: let it be, moving in thirds
+future: appregios
+learned: let it be, triads, moving in thirds, triplets, appregios
+piano
+-----
+Date: 2014-06-17
+improved: old school triplets, appregios,
+future: chords and their inversions
+learned: old school triplets, old school triplets version for small hands, appregio version of first chord progresion, f major scale left and right hand
+
+./tenk.sh view -s 3 -d 2014-06-15
+piano
+-----
+Date: 2014-06-15
+improved: triads
+future: let it be
+learned: triads, moving in thirds, let it be
+```
+
+The view command displays session data for up to the 5 most recent
+dates. You can view the data for a specific date by using the `--date`
+or `-d` flag.
+
 Development
 ===========
 tenk was developed using Python 3 and is not compatible with Python

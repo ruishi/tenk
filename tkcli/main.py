@@ -6,6 +6,7 @@ import configparser
 import re
 
 from tenk import utils
+from tenk.sessionviewer import SessionViewer
 
 def get_skill_choice(choice, configfile='default.config'):
     user = utils.load_user(configfile=configfile)
@@ -98,6 +99,17 @@ def cli_note_handler(args):
     if notes:
         utils.add_notes(skill, notes, configfile=args.configfile)
 
+def cli_view_handler(args):
+    skill = get_skill_choice(choice=args.skill, configfile=args.configfile)
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read(args.configfile)
+    sessions_filepath = config['PATHS']['sessions_filepath']
+    session_viewer = SessionViewer(skill, sessions_filepath)
+    if args.date:
+        session_viewer.print_session(args.date)
+    else:
+        session_viewer.print_recent()
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog="python3 -m tenk.main")
     parser.add_argument('-c', '--configfile',
@@ -150,6 +162,15 @@ if __name__ == '__main__':
     parser_note.add_argument('notes',
                              nargs='+')
     parser_note.set_defaults(func=cli_note_handler)
+
+    parser_view = subparsers.add_parser('view', aliases=['v'],
+                                        parents=[date_parser])
+    parser_view.add_argument('-s', '--skill',
+                             type=float,
+                             metavar='skill',
+                             required=True,
+                             help='Skill to view session data for')
+    parser_view.set_defaults(func=cli_view_handler)
 
     cli_args = parser.parse_args()
 
