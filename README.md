@@ -99,7 +99,7 @@ category at all, tenk will save the note in a node called `notes`.
 
 **View notes:**
 ```sh
-./tenk.sh view -s 3
+$ ./tenk.sh view -s 3
 piano
 -----
 Date: 2014-06-09
@@ -130,7 +130,7 @@ improved: old school triplets, appregios,
 future: chords and their inversions
 learned: old school triplets, old school triplets version for small hands, appregio version of first chord progresion, f major scale left and right hand
 
-./tenk.sh view -s 3 -d 2014-06-15
+$ ./tenk.sh view -s 3 -d 2014-06-15
 piano
 -----
 Date: 2014-06-15
