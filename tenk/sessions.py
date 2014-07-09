@@ -100,6 +100,17 @@ class Session:
         root = self.generate_xml()
         self.save(root)
 
+    @classmethod
+    def deserialize(cls, skill_name, session_node):
+        session_date = session_node.get('date')
+        params = dict()
+        params['skill_name'] = skill_name
+        params['session_date'] = session_date
+        params['file_path'] = None
+        for child in session_node:
+            params[child.tag] = child.text
+        return cls(**params)
+
     def __repr__(self):
         """Representation of session object.
 
