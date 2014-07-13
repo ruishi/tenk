@@ -40,6 +40,7 @@ class Form(QtGui.QDialog):
     def new_user_setup(self):
         """If no user data exists, create a blank GUI with a single button
         to add a skill"""
+        self.layout.addLayout(self.main_view_layout)
         self.setLayout(self.layout)
 
     def existing_user_setup(self):
@@ -49,6 +50,7 @@ class Form(QtGui.QDialog):
                                        skill.calc_level(),
                                        skill.calc_progress())
 
+        self.layout.addLayout(self.main_view_layout)
         self.setLayout(self.layout)
 
     def setup_bottom_bar(self):
@@ -84,18 +86,16 @@ class Form(QtGui.QDialog):
                                                    progress_bar,
                                                    add_button)
         # horizontal box for name and level
-        nl_hbox = QtGui.QHBoxLayout()
-        nl_hbox.addWidget(name_label)
-        nl_hbox.addWidget(level_label)
-        self.main_view_layout.addLayout(nl_hbox)
+        nl_splitter = QtGui.QSplitter()
+        nl_splitter.addWidget(name_label)
+        nl_splitter.addWidget(level_label)
+        self.main_view_layout.addWidget(nl_splitter)
 
         # horizontal box for progress bar and add button
-        pa_hbox = QtGui.QHBoxLayout()
-        pa_hbox.addWidget(progress_bar)
-        pa_hbox.addWidget(add_button)
-        self.main_view_layout.addLayout(pa_hbox)
-
-        self.layout.addLayout(self.main_view_layout)
+        pa_splitter = QtGui.QSplitter()
+        pa_splitter.addWidget(progress_bar)
+        pa_splitter.addWidget(add_button)
+        self.main_view_layout.addWidget(pa_splitter)
 
 
     def setup_add_time_win(self):
@@ -129,7 +129,6 @@ class Form(QtGui.QDialog):
                 message_box = QtGui.QMessageBox()
                 message_box.setText("{} is not a valid number.".format(hours))
                 message_box.exec_()
-
 
 
 if __name__ == '__main__':
