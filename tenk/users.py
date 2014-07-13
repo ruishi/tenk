@@ -23,10 +23,11 @@ class User:
         skillname -- the name of the skill being added
         hours -- the amount of time spent developing the skill so far
 
-        Returns None"""
+        Returns skill object"""
 
         skill = Skill(skillname, hours)
         self.skillset.append(skill)
+        return skill
 
     def remove_skill(self, skillname):
         """Removes a skill from a user's skillset.

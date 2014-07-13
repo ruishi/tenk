@@ -53,8 +53,9 @@ def add_time(skill, time, date=None, configfile='default.config'):
 
 def add_skill(name, hours=0, configfile='default.config'):
     user = load_user(create=True, configfile=configfile)
-    user.add_skill(name, hours)
+    skill = user.add_skill(name, hours)
     save(user, configfile)
+    return skill
 
 def remove_skill(skill, configfile='default.config'):
     user = load_user(configfile=configfile)
