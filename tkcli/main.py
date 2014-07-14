@@ -6,10 +6,52 @@ import configparser
 import re
 
 from tenk import utils
+from tenk.sessions import Session
 from tenk.sessionviewer import SessionViewer
 
-def get_skill_choice(choice, configfile='default.config'):
-    user = utils.load_user(configfile=configfile)
+no_data_msg = "You have no data!"
+config = configparser.ConfigParser(allow_no_value=True)
+
+def add_skill(name, hours=0):
+    user = utils.load_user(create=True, config=config)
+    user.add_skill(name, hours)
+    utils.save(user, config)
+
+def remove_skill(skill):
+    user = utils.load_user(config=config)
+    if user:
+        user.remove_skill(skill)
+        utils.save(user, config)
+    else:
+        print(no_data_msg)
+
+def add_time(skill, time, date=None):
+    user = utils.load_user(config=config)
+    if user:
+        user.add_time(skill, time)
+        utils.save(user, config)
+        params = {'skill_name': skill, 'hours': time,
+                  'file_path': config['PATHS']['sessions_filepath']}
+        if date:
+            params['session_date'] = date
+        session = Session(**params)
+        session.serialize_and_save()
+    else:
+        print(no_data_msg)
+
+def add_notes(skill, notes):
+    user = utils.load_user(create=False, config=config)
+    if user:
+        sessions_filepath = config['PATHS']['sessions_filepath']
+        session = Session(skill, file_path=sessions_filepath,
+                          **notes)
+        session.serialize_and_save()
+        print(session)
+    else:
+        print(no_data_msg)
+
+def get_skill_choice(choice):
+    user = utils.load_user(config=config)
     if user:
         skill = generate_dict(user.get_skill_names())[choice]
         return skill
@@ -21,54 +63,51 @@ def generate_dict(xs):
     a number and the value is an element of xs"""
     return {float(i + 1):xs[i] for i in range(len(xs))}
 
-def list_skills(configfile='default.config'):
+def list_skills():
     """List a user's skills and each skill's number."""
-    user = utils.load_user(configfile=configfile)
+    user = utils.load_user(config=config)
     if user:
         for idx, skill in enumerate(user.get_skill_names()):
             print("{}. {}".format(idx + 1, skill))
     else:
-        print(utils.no_data_msg)
+        print(no_data_msg)
 
-def print_progress(configfile='default.config'):
+def print_progress():
     """Print a user's progress"""
-    user = utils.load_user(configfile=configfile)
+    user = utils.load_user(config=config)
     if user:
         user.print_progress()
     else:
-        print(utils.no_data_msg)
+        print(no_data_msg)
 
 def cli_list_handler(args):
     """Handles list-related CLI arguments"""
     if args.skills:
-        list_skills(configfile=args.configfile)
+        list_skills()
     elif args.progress:
-        print_progress(configfile=args.configfile)
+        print_progress()
 
 
 def cli_add_handler(args):
     """Handles add-related CLI arguments"""
     if args.time:
-        skill = get_skill_choice(args.time[0], configfile=args.configfile)
+        skill = get_skill_choice(args.time[0])
         if args.date:
-            utils.add_time(skill=skill, time=float(args.time[1]),
-                           date=args.date, configfile=args.configfile)
+            add_time(skill=skill, time=float(args.time[1]),
+                           date=args.date)
         else:
-            utils.add_time(skill=skill, time=float(args.time[1]),
-                           configfile=args.configfile)
+            add_time(skill=skill, time=float(args.time[1]))
     elif args.skill:
         if len(args.skill) == 2:
-            utils.add_skill(name=args.skill[0], hours=float(args.skill[1]),
-                            configfile=args.configfile)
+            add_skill(name=args.skill[0], hours=float(args.skill[1]))
         else:
-            utils.add_skill(name=args.skill[0], configfile=args.configfile)
+            add_skill(name=args.skill[0])
 
 def cli_del_handler(args):
     """Handles deletion-related CLI arguments"""
     if args.skill:
-        skill = get_skill_choice(choice=args.skill,
-                                 configfile=args.configfile)
-        utils.remove_skill(skill=skill, configfile=args.configfile)
+        skill = get_skill_choice(choice=args.skill)
+        remove_skill(skill=skill)
 
 def get_note_pairs(notes):
     """Use regex to put create tuples of note category and content"""
@@ -77,7 +116,7 @@ def get_note_pairs(notes):
 
 def cli_note_handler(args):
     """Handles note-related CLI arguments"""
-    skill = get_skill_choice(choice=args.skill, configfile=args.configfile)
+    skill = get_skill_choice(choice=args.skill)
     # argparse returns a list of strings, so they need to be
     # joined into one string
     note_input = ' '.join(args.notes)
@@ -86,8 +125,6 @@ def cli_note_handler(args):
     else:
         notes = dict()
         note_pairs = get_note_pairs(note_input)
-        config = configparser.ConfigParser(allow_no_value=True)
-        config.read(args.configfile)
         note_categories = list(config['NOTE CATEGORIES'].keys())
         for pair in note_pairs:
             if pair[0] in note_categories:
@@ -97,12 +134,10 @@ def cli_note_handler(args):
     if args.date:
         notes['session_date'] = args.date
     if notes:
-        utils.add_notes(skill, notes, configfile=args.configfile)
+        add_notes(skill, notes)
 
 def cli_view_handler(args):
-    skill = get_skill_choice(choice=args.skill, configfile=args.configfile)
-    config = configparser.ConfigParser(allow_no_value=True)
-    config.read(args.configfile)
+    skill = get_skill_choice(choice=args.skill)
     sessions_filepath = config['PATHS']['sessions_filepath']
     session_viewer = SessionViewer(skill, sessions_filepath)
     if args.date:
@@ -174,4 +209,5 @@ if __name__ == '__main__':
 
     cli_args = parser.parse_args()
 
+    config.read(cli_args.configfile)
     cli_args.func(cli_args)

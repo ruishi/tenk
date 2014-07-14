@@ -16,35 +16,36 @@ class User:
         self.name = username
         self.skillset = skillset
 
-    def add_skill(self, skillname, hours = 0):
+    def add_skill(self, skill_name, hours = 0):
         """Adds a skill to a user's skillset.
 
         Keyword arguments:
-        skillname -- the name of the skill being added
+        skill_name -- the name of the skill being added
         hours -- the amount of time spent developing the skill so far
 
-        Returns None"""
+        Returns skill object"""
 
-        skill = Skill(skillname, hours)
+        skill = Skill(skill_name, hours)
         self.skillset.append(skill)
+        return skill
 
-    def remove_skill(self, skillname):
+    def remove_skill(self, skill_name):
         """Removes a skill from a user's skillset.
 
         Keyword arguments:
-        skillname -- the name of the skill being removed
+        skill_name -- the name of the skill being removed
 
         Returns None."""
 
         for skill in self.skillset:
-            if skillname == skill.name:
+            if skill_name == skill.name:
                 self.skillset.remove(skill)
 
-    def add_time(self, skillname, time):
+    def add_time(self, skill_name, time):
         """Add to time spent developing a skill.
 
         Keyword arguments:
-        skillname - the name of the skill to add hours to
+        skill_name - the name of the skill to add hours to
 
         Returns None."""
 
@@ -54,12 +55,12 @@ class User:
             raise OutOfRangeError("time added must be positive")
 
         for index, skill in enumerate(self.skillset):
-            if skillname == skill.name:
+            if skill_name == skill.name:
                 self.skillset[index].hours += time
                 skill_exists = True
 
         if not skill_exists:
-            raise DoesNotExistError("{} not in skillset.".format(skillname))
+            raise DoesNotExistError("{} not in skillset.".format(skill_name))
 
     def get_skill_names(self):
         """Returns a list with all the names of all the skills a user is
