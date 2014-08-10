@@ -41,22 +41,23 @@ class User:
             if skill_name == skill.name:
                 self.skillset.remove(skill)
 
-    def add_time(self, skill_name, time):
+    def add_time(self, skill_name, hours):
         """Add to time spent developing a skill.
 
         Keyword arguments:
         skill_name - the name of the skill to add hours to
+        time -- the amount of time practiced
 
         Returns None."""
 
         skill_exists = False
 
-        if time < 0:
+        if hours < 0:
             raise OutOfRangeError("time added must be positive")
 
         for index, skill in enumerate(self.skillset):
             if skill_name == skill.name:
-                self.skillset[index].hours += time
+                self.skillset[index].hours += hours
                 skill_exists = True
 
         if not skill_exists:
