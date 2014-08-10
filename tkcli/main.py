@@ -4,6 +4,7 @@
 import argparse
 import configparser
 import re
+from collections import OrderedDict
 
 from tenk import utils
 from tenk.sessions import Session
@@ -44,7 +45,7 @@ def add_notes(skill, notes):
     if user:
         sessions_filepath = config['PATHS']['sessions_filepath']
         session = Session(skill, file_path=sessions_filepath,
-                          **notes)
+                          notes=notes)
         session.serialize_and_save()
         print(session)
     else:
@@ -120,10 +121,10 @@ def cli_note_handler(args):
     # argparse returns a list of strings, so they need to be
     # joined into one string
     note_input = ' '.join(args.notes)
+    notes = OrderedDict()
     if '=' not in note_input and ':' not in note_input:
-        notes = {'notes': note_input}
+        notes['notes'] = note_input
     else:
-        notes = dict()
         note_pairs = get_note_pairs(note_input)
         note_categories = list(config['NOTE CATEGORIES'].keys())
         for pair in note_pairs:
