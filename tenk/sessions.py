@@ -2,6 +2,8 @@
 
 import os
 from datetime import date
+from collections import OrderedDict
+
 from lxml import etree
 
 class Session:
@@ -12,11 +14,11 @@ class Session:
     hours (float) -- optional, the amount of hours spent on the
                      practice session
     session_date (datetime.date) -- the date of the practice session
-    kwargs (dict) - extra note nodes
+    notes (OrderedDict) - extra note nodes
     """
 
     def __init__(self, skill_name, file_path, hours=None, session_date=None,
-                 **kwargs):
+                 notes=None):
         self.skill_name = skill_name
         self.hours = hours
         if session_date:
@@ -24,7 +26,7 @@ class Session:
             self.session_date = date(*session_date)
         else:
             self.session_date = date.today()
-        self.notes = kwargs
+        self.notes = notes
         self.file_path = file_path
 
     def has_save_file(self):
@@ -37,6 +39,7 @@ class Session:
             with open(self.file_path) as f:
                 parser = etree.XMLParser(remove_blank_text=True)
                 root = etree.parse(f, parser).getroot()
+
             skill_node = root.find('skill[@name="{}"]'.format(self.skill_name))
             if skill_node is not None:
                 session_node = self.find_existing_session(skill_node)
@@ -107,8 +110,14 @@ class Session:
         params['skill_name'] = skill_name
         params['session_date'] = session_date
         params['file_path'] = None
+        notes = OrderedDict()
         for child in session_node:
-            params[child.tag] = child.text
+            if child.tag == 'hours':
+                params[child.tag] = child.text
+            else:
+                notes[child.tag] = child.text
+        if notes:
+            params['notes'] = notes
         return cls(**params)
 
     def __repr__(self):
